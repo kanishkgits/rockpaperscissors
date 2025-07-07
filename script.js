@@ -1,33 +1,42 @@
+let humanScore = 0, computerScore = 0
+let humanChoice, computerChoice, roundResultText
+const buttons = document.querySelector("#buttons")
+const roundResult = document.querySelector("#roundResult")
+const score = document.querySelector("#score")
+const result = document.querySelector("#result")
+
 let getComputerChoice = () => {
-    let a = Math.random()
-    if(a<0.33) return "rock"
-    else if(a<0.66) return "paper"
+    let min = 1, max = 3
+    let randomChoice = Math.floor(Math.random() * (max-min+1) + min) 
+    if(randomChoice === 1) return "rock"
+    else if(randomChoice === 2) return "paper"
     return "scissors"
 }
 
-let getHumanChoice = () => {
-    let b = prompt("Rock, Papers, Scissors!!")
-    return b.toLowerCase()
-}
-
-let humanScore = 0, computerScore = 0
-let humanChoice, computerChoice 
 let playRound = (humanChoice, computerChoice) => {
-    if(humanChoice == computerChoice) console.log("Draw! You both chose the same.")
+    if(humanChoice == computerChoice) roundResultText = "Draw! You both chose the same."
     else if((humanChoice == "rock" && computerChoice == "paper" )|| (humanChoice == "paper" && computerChoice == "scissors") || (humanChoice == "scissors" && computerChoice == "rock")){
-        console.log("You loose!" + computerChoice + " beats " + humanChoice + "!!")
+        roundResultText = `You loose! ${computerChoice} beats ${humanChoice} !!`
         computerScore++
     }
     else{
-        console.log("You win!" + humanChoice + " beats " + computerChoice + "!!")
+        roundResultText = `You win! ${humanChoice} beats ${computerChoice} !!`
         humanScore++
     }
 }
-for(let i = 0; i < 5; i++) {
-    humanChoice = getHumanChoice()
+
+let displayContents = () => {
+    roundResult.textContent = roundResultText
+    score.textContent = `Your Score: ${humanScore} Computer Score: ${computerScore}`
+    if(humanScore === 5 || computerScore === 5){
+        if(humanScore>computerScore) result.textContent = "You WON"
+        else result.textContent = "You LOST"
+    }
+}
+
+buttons.addEventListener("click", (e) => {
+    humanChoice = e.target.id
     computerChoice = getComputerChoice()
     playRound(humanChoice, computerChoice)
-}
-if(computerScore > humanScore) console.log( "You Lost!!")
-else if(humanScore > computerScore) console.log("You WON!!!")
-else console.log("It's a TIE !!!")
+    displayContents()
+})
